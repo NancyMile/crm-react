@@ -1,6 +1,13 @@
+export function loader() {
+  return 'Desde loader';
+ }
+
 const Index = () => {
   return (
-    <div>Clients</div>
+    <>
+      <h1 className="font-black text-4xl text-blue-900">Clients</h1>
+      <p className="mt-3 ">Manage Clients</p>
+    </>
   )
 }
 
