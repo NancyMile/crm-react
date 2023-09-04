@@ -5,6 +5,7 @@ import Error from '../components/Error'
 export async function action({ request }) {
   const formData = await request.formData()
   const data = Object.fromEntries(formData)
+  const email = formData.get('email')
   //console.log(data)
 
   //validate data
@@ -14,12 +15,18 @@ export async function action({ request }) {
   }
   //console.log(errors)
 
+  //validate email
+  let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])");
+  if (!regex.test(email)) {
+    errors.push('Invalid email')
+  }
+
   //return errors
   if (Object.keys(errors).length) {
     return errors
   }
 
-  return 1
+  //return 1
 }
 
 const NewClient = () => {
@@ -27,7 +34,7 @@ const NewClient = () => {
   const navigate = useNavigate()
   const errors = useActionData()
 
-  console.log(errors)
+  //console.log(errors)
   return (
     <>
        <h1 className="font-black text-4xl text-blue-900">New Client</h1>
@@ -46,6 +53,7 @@ const NewClient = () => {
 
         <Form
           method='post'
+          noValidate
         >
           <ClientForm />
           <input className="bg-blue-800 p-3 w-full uppercase text-white font-bold text-lg" type="submit" value="Save Client"/>
