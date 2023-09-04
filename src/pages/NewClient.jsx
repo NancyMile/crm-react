@@ -1,9 +1,17 @@
 import {useNavigate, Form} from 'react-router-dom'
 import ClientForm from '../components/ClientForm'
 
-export function action() {
-  console.log("form action")
-  return "hiiii"
+export async function action({ request }) {
+  //console.log("form action")
+  //console.log(request)
+  const formData = await request.formData()
+  //console.log(formData.get('name'))
+  //console.log([...formData]) //gest all data
+
+  //better option for getting data
+  const data = Object.fromEntries(formData)
+  console.log(data)
+  return 1
 }
 
 const NewClient = () => {
