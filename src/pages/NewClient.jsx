@@ -1,5 +1,10 @@
-import {useNavigate} from 'react-router-dom'
-import Form from '../components/Form'
+import {useNavigate, Form} from 'react-router-dom'
+import ClientForm from '../components/ClientForm'
+
+export function action() {
+  console.log("form action")
+  return "hiiii"
+}
 
 const NewClient = () => {
 
@@ -17,10 +22,12 @@ const NewClient = () => {
         </button>
       </div>
       <div className='bg-white shadow rounded-md md:w-3/4 mx-auto px-5 py-10 mt-20'>
-        <form>
-          <Form />
+        <Form
+          method='post'
+        >
+          <ClientForm />
           <input className="bg-blue-800 p-3 w-full uppercase text-white font-bold text-lg" type="submit" value="Save Client"/>
-        </form>
+        </Form>
       </div>
     </>
   )
