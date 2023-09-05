@@ -1,6 +1,7 @@
-import {useNavigate, Form, useActionData} from 'react-router-dom'
+import {useNavigate, Form, useActionData, redirect} from 'react-router-dom'
 import ClientForm from '../components/ClientForm'
 import Error from '../components/Error'
+import { addClient } from '../data/clients'
 
 export async function action({ request }) {
   const formData = await request.formData()
@@ -26,7 +27,8 @@ export async function action({ request }) {
     return errors
   }
 
-  //return 1
+  await addClient(data)
+  return redirect('/')
 }
 
 const NewClient = () => {
