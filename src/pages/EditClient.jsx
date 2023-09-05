@@ -1,10 +1,11 @@
-import { Form, useNavigate, useLoaderData } from "react-router-dom"
-import { editClient } from "../data/clients"
+import { Form, useNavigate, useLoaderData, useActionData, redirect } from "react-router-dom"
+import { getClient, editClient } from "../data/clients"
 import ClientForm from "../components/ClientForm"
+import Error from "../components/Error"
 
 export async function loader({ params }) {
     //console.log(params)
-    const client = await editClient(params.clientId)
+    const client = await getClient(params.clientId)
 
     if (Object.values(client).length === 0) {
         throw new Response('', {
@@ -16,9 +17,38 @@ export async function loader({ params }) {
     return client
 }
 
+export async function action({ request,params}) {
+    const formData = await request.formData()
+    const data = Object.fromEntries(formData)
+    const email = formData.get('email')
+    //console.log(data)
+
+    //validate data
+    const errors = []
+    if (Object.values(data).includes('')) {
+      errors.push('All the fields are compulsory')
+    }
+    //console.log(errors)
+
+    //validate email
+    let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])");
+    if (!regex.test(email)) {
+      errors.push('Invalid email')
+    }
+
+    //return errors
+    if (Object.keys(errors).length) {
+      return errors
+    }
+
+    await editClient(params.clientId,data)
+    return redirect('/')
+}
+
 const EditClient = () => {
     const navigate = useNavigate()
     const client = useLoaderData()
+    const errors = useActionData()
     //console.log(client)
     return (
         <>
@@ -32,9 +62,9 @@ const EditClient = () => {
                 </button>
             </div>
             <div className='bg-white shadow rounded-md md:w-3/4 mx-auto px-5 py-10 mt-20'>
-                {/* {errors?.length && errors.map((error, i) => (
+                {errors?.length && errors.map((error, i) => (
                 <Error  key={i}>{error}</Error>
-                ))} */}
+                ))}
 
                 <Form
                 method='post'
